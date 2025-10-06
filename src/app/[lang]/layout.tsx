@@ -1,19 +1,23 @@
 import type { Metadata } from 'next'
 import { Providers } from './providers'
-import '../styles/globals.css'
+import '@/styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'Leboncoin - Messages',
   description: 'Messaging interface for Leboncoin',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode
+  params: Promise<{ lang: string }>
 }) {
+  const { lang } = await params
+
   return (
-    <html lang="en">
+    <html lang={lang}>
       <body>
         <Providers>{children}</Providers>
       </body>
