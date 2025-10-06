@@ -1,6 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Leboncoin brand colors */
+  --color-lbc-orange: #F56B2A;
+  --color-lbc-blue: #E6F2FD;
+  --color-lbc-dark: #152233;
+
+  /* Message bubbles */
+  --color-chat-sent: #F56B2A;
+  --color-chat-received: #E5E5EA;
+
+  /* Avatar colors */
+  --color-avatar-yellow: #FDD835;
+  --color-avatar-red: #F44336;
+  --color-avatar-pink: #E91E63;
+  --color-avatar-teal: #26A69A;
+  --color-avatar-blue: #42A5F5;
+  --color-avatar-purple: #9C27B0;
+}
 
 html,
 body {
