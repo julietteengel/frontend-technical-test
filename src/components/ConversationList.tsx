@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { getConversations, getUsers } from '@/lib/api'
 import { formatTime } from '@/lib/utils'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
@@ -21,14 +22,35 @@ export function ConversationList({ lang }: ConversationListProps) {
   const { data: conversations, isLoading: loadingConvs, error, refetch } = useQuery({
     queryKey: ['conversations', loggedUserId],
     queryFn: () => getConversations(loggedUserId),
+    staleTime: 30000,
   })
 
   const { data: users, isLoading: loadingUsers } = useQuery({
     queryKey: ['users'],
     queryFn: getUsers,
+    staleTime: 60000,
   })
 
   const isLoading = loadingConvs || loadingUsers
+
+  const conversationsWithUsers = useMemo(() => {
+    if (!conversations || !users) return []
+
+    return conversations
+      .map((conversation) => {
+        const otherUserId =
+          conversation.senderId === loggedUserId
+            ? conversation.recipientId
+            : conversation.senderId
+        const otherUser = users.find((u) => u.id === otherUserId)
+
+        return {
+          ...conversation,
+          otherUser,
+        }
+      })
+      .filter((conv) => conv.otherUser)
+  }, [conversations, users, loggedUserId])
 
   if (isLoading) {
     return <ConversationListSkeleton />
@@ -46,20 +68,14 @@ export function ConversationList({ lang }: ConversationListProps) {
     )
   }
 
-  if (!conversations || conversations.length === 0) {
+  if (conversationsWithUsers.length === 0) {
     return <div className="p-4 text-center text-gray-500">{t.conversations.noConversations}</div>
   }
 
   return (
     <nav aria-label="Conversations list" className="divide-y divide-gray-200">
-      {conversations.map((conversation) => {
-        const otherUserId =
-          conversation.senderId === loggedUserId
-            ? conversation.recipientId
-            : conversation.senderId
-
-        const otherUser = users?.find((u) => u.id === otherUserId)
-
+      {conversationsWithUsers.map((conversation) => {
+        const { otherUser } = conversation
         if (!otherUser) return null
 
         return (
@@ -68,6 +84,7 @@ export function ConversationList({ lang }: ConversationListProps) {
             href={`/${lang}/conversations/${conversation.id}`}
             className="flex items-center gap-4 p-4 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-lbc-orange transition-colors"
             aria-label={`Conversation with ${otherUser.nickname}`}
+            prefetch={true}
           >
             <Avatar nickname={otherUser.nickname} userId={otherUser.id} />
             <div className="flex-1 min-w-0">

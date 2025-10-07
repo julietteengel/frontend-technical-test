@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { ConversationList } from './ConversationList'
-import { CreateConversationModal } from './CreateConversationModal'
 import { getTranslations, type Locale } from '@/locales'
+
+const CreateConversationModal = lazy(() =>
+  import('./CreateConversationModal').then((mod) => ({
+    default: mod.CreateConversationModal,
+  }))
+)
 
 interface ConversationListWithModalProps {
   lang: Locale
@@ -39,11 +44,15 @@ export function ConversationListWithModal({
         </button>
       </div>
       <ConversationList lang={lang} />
-      <CreateConversationModal
-        lang={lang}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <Suspense fallback={null}>
+          <CreateConversationModal
+            lang={lang}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </Suspense>
+      )}
     </>
   )
 }

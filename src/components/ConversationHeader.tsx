@@ -18,11 +18,13 @@ export function ConversationHeader({ lang, conversationId }: ConversationHeaderP
   const { data: conversations } = useQuery({
     queryKey: ['conversations', loggedUserId],
     queryFn: () => getConversations(loggedUserId),
+    staleTime: 30000,
   })
 
   const { data: users } = useQuery({
     queryKey: ['users'],
     queryFn: getUsers,
+    staleTime: 60000,
   })
 
   const conversation = conversations?.find(c => c.id === conversationId)

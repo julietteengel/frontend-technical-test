@@ -24,6 +24,11 @@ export function MessageList({ lang, conversationId }: MessageListProps) {
   const { data: messages, isLoading, error, refetch } = useQuery({
     queryKey: ['messages', conversationId],
     queryFn: () => getMessages(conversationId),
+    refetchInterval: (query) => {
+      // Only poll when tab is visible and query succeeded
+      return document.visibilityState === 'visible' ? 5000 : false
+    },
+    staleTime: 1000,
   })
 
   useEffect(() => {
