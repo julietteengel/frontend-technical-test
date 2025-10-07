@@ -9,7 +9,8 @@
     "start": "next start",
     "start-server": "json-server --watch src/server/db.json --routes src/server/routes.json --middlewares src/server/middleware/conversations.js --port 3005",
     "test": "jest",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -39,10 +40,18 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.22.0",
     "eslint-config-next": "^15.2.2",
+    "husky": "^9.1.7",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "json-server": "^0.17.1",
+    "lint-staged": "^16.2.3",
     "typescript": "^5.8.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "bash -c 'tsc --noEmit'"
+    ]
   }
 }

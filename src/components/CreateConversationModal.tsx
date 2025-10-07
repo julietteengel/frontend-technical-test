@@ -147,7 +147,7 @@ export function CreateConversationModal({
                     <span className="flex-1 font-medium text-gray-900">
                       {user.nickname}
                     </span>
-                    {selectedUserId === user.id && (
+                    {Number(selectedUserId) === user.id && (
                       <svg
                         className="w-5 h-5 text-lbc-orange"
                         fill="currentColor"

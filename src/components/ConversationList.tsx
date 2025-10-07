@@ -90,7 +90,7 @@ export function ConversationList({ lang }: ConversationListProps) {
             <div className="flex-1 min-w-0">
               <p className="font-medium text-gray-900 truncate">{otherUser.nickname}</p>
               <p className="text-sm text-gray-500">
-                {formatTime(conversation.lastMessageTimestamp * 1000, lang)}
+                {conversation.lastMessageTimestamp && formatTime(conversation.lastMessageTimestamp * 1000, lang)}
               </p>
             </div>
           </Link>
