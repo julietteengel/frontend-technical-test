@@ -136,7 +136,7 @@ GET    /users                           # List users
 - CORS enabled for development
 
 **Why this choice:**
-- **Fast setup** - Critical for 4-hour constraint
+- **Fast setup** - Critical for time constraint
 - **Custom logic** - Middleware allows OR filtering, metadata generation
 - **Persistent data** - Changes saved during development
 - **Real API feel** - Proper endpoints, not just mock data
@@ -185,7 +185,7 @@ GET    /users                           # List users
 
 ## Future Improvements
 
-> **Note:** These are improvements I would add with more time. They represent conscious trade-offs made for the 4-hour constraint.
+> **Note:** These are improvements I would add with more time. They represent conscious trade-offs made for the time constraint.
 
 ### 🧪 Testing
 **Current:** No automated tests
@@ -366,7 +366,7 @@ The implementation showcases:
 - Production-ready performance optimizations
 - Accessibility awareness
 - Security best practices
-- Realistic scope for a 4-hour technical test
+- Realistic scope
 
 ---
 
