@@ -1,4 +1,5 @@
 import { getTranslations, type Locale } from '@/locales'
+import { ConversationList } from '@/components/ConversationList'
 
 export function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'fr' }]
@@ -13,10 +14,12 @@ export default async function Home({
   const t = getTranslations(lang as Locale)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-lbc-orange mb-4">{t.app.title}</h1>
-        <p className="text-gray-600">{t.app.comingSoon}</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto bg-white shadow-lg min-h-screen">
+        <header className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+          <h1 className="text-xl font-bold text-gray-900">{t.app.title}</h1>
+        </header>
+        <ConversationList lang={lang as Locale} />
       </div>
     </div>
   )

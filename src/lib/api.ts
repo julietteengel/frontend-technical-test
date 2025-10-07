@@ -7,7 +7,10 @@ import {
   type User,
 } from './schemas'
 
-const API_BASE_URL = 'http://localhost:3005'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === 'production'
+    ? (() => { throw new Error('NEXT_PUBLIC_API_URL is required in production') })()
+    : 'http://localhost:3005')
 
 async function apiRequest<T>(
   endpoint: string,
@@ -21,7 +24,7 @@ async function apiRequest<T>(
 }
 
 export async function getConversations(userId: number): Promise<Conversation[]> {
-  const data = await apiRequest<Conversation[]>(`/conversations/${userId}`)
+  const data = await apiRequest<Conversation[]>(`/conversations?senderId=${userId}`)
   return conversationsResponseSchema.parse(data)
 }
 
@@ -34,11 +37,16 @@ export async function sendMessage(
   conversationId: number,
   authorId: number,
   body: string
-): Promise<Message> {
-  return apiRequest<Message>(`/messages/${conversationId}`, {
+): Promise<void> {
+  await apiRequest('/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ authorId, body }),
+    body: JSON.stringify({
+      conversationId,
+      authorId,
+      body,
+      timestamp: Math.floor(Date.now() / 1000),
+    }),
   })
 }
 

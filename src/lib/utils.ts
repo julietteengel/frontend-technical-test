@@ -1,22 +1,20 @@
-import { formatDistanceToNow } from 'date-fns'
-import { fr } from 'date-fns/locale'
-import DOMPurify from 'isomorphic-dompurify'
+import { formatDistanceToNow, type Locale as DateFnsLocale } from 'date-fns'
+import { fr, enUS } from 'date-fns/locale'
+import type { Locale } from '@/locales'
 
-/**
- * Format timestamp to relative time (e.g., "il y a 2 heures")
- */
-export function formatTime(timestamp: number): string {
-  return formatDistanceToNow(new Date(timestamp), {
-    addSuffix: true,
-    locale: fr,
-  })
+const dateLocales: Record<Locale, DateFnsLocale> = {
+  fr: fr,
+  en: enUS,
 }
 
 /**
- * Sanitize user input to prevent XSS attacks
+ * Format timestamp to relative time (e.g., "2 hours ago" or "il y a 2 heures")
  */
-export function sanitize(dirty: string): string {
-  return DOMPurify.sanitize(dirty, { ALLOWED_TAGS: [] })
+export function formatTime(timestamp: number, locale: Locale = 'fr'): string {
+  return formatDistanceToNow(new Date(timestamp), {
+    addSuffix: true,
+    locale: dateLocales[locale],
+  })
 }
 
 /**
