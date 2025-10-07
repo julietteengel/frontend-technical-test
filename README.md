@@ -1,16 +1,5 @@
 # Frontend Technical Test - Leboncoin
 
-## Time Spent: ~4 hours
-
-### Breakdown:
-- **Setup & Architecture:** 45 min
-- **Core Features:** 1h 30min
-- **Bonus 1 (Create Conversations):** 45 min
-- **Bonus 2 (503 Error Handling):** 20 min
-- **Polish, Accessibility & Performance:** 40 min
-
----
-
 ## Technical Stack
 
 - **Next.js 15** - App Router with Server Components

@@ -53,6 +53,20 @@
       "timestamp": 1620284667,
       "authorId": 2,
       "body": "Bonjour c'est le premier message de la seconde conversation"
+    },
+    {
+      "conversationId": 1,
+      "authorId": 1,
+      "body": "salut",
+      "timestamp": 1759811501,
+      "id": 5
+    },
+    {
+      "conversationId": 3,
+      "authorId": 1,
+      "body": "wesh",
+      "timestamp": 1759811529,
+      "id": 6
     }
   ],
   "users": [
@@ -74,6 +88,21 @@
     {
       "id": 4,
       "nickname": "Elodie",
+      "token": "xxxx"
+    },
+    {
+      "id": 5,
+      "nickname": "Sophie",
+      "token": "xxxx"
+    },
+    {
+      "id": 6,
+      "nickname": "Alexandre",
+      "token": "xxxx"
+    },
+    {
+      "id": 7,
+      "nickname": "Marie",
       "token": "xxxx"
     }
   ]
