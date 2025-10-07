@@ -5,7 +5,7 @@ const db = require(`${path.dirname(__filename)}/../db.json`)
 // and return both conversations where userId is sender or recipient
 module.exports = (req, res, next) => {
   if (/conversations/.test(req.url) && req.method === 'GET') {
-    const userId = req.query?.senderId
+    const userId = parseInt(req.query?.senderId, 10)
     const result = db?.conversations?.filter(
       conv => conv.senderId === userId || conv.recipientId === userId
     )

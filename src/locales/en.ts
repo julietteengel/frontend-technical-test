@@ -14,6 +14,12 @@ export default {
     you: 'You',
     other: 'Other',
   },
+  error: {
+    title: "It's not you, it's me",
+    description: "Something went wrong on our end. We're working to fix it.",
+    tryAgain: 'Try again',
+    errorId: 'Error ID',
+  },
   common: {
     retry: 'Retry',
   },

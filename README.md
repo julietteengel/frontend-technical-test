@@ -56,28 +56,34 @@ npm run dev
 ## Features Implemented
 
 ### ✅ Core Features
-- View conversations list
-- View messages in a conversation
-- Send messages
-
-### ✅ Bonus 1: Create New Conversations
-- Modal to select user
-- Create conversation via API
-- Navigate to new conversation
-
-### ✅ Bonus 2: Handle 503 Errors
-- Friendly error message: "It's not you, it's me"
-- Automatic retry with exponential backoff
-- Manual retry button
-
-### ✅ Additional Features
-- Search/filter conversations
-- Optimistic UI updates
+- View conversations list with avatar and last message preview
+- View messages in a conversation with timestamps
+- Send messages with React Hook Form validation
+- Auto-scroll to bottom when new messages arrive
 - Responsive design (mobile + desktop)
-- Loading skeletons
-- Basic accessibility
-- Input validation
-- XSS protection
+- i18n support (en/fr) via URL routing
+
+### 🚧 Bonus 1: Create New Conversations (In Progress)
+- [ ] Modal to select user
+- [ ] Create conversation via API
+- [ ] Navigate to new conversation
+
+### 🚧 Bonus 2: Handle 503 Errors (In Progress)
+- [ ] error.tsx with friendly error message
+- [ ] Automatic retry with exponential backoff
+- [ ] Manual retry button
+
+### ✅ Additional Features Implemented
+- Loading skeletons for better UX
+- Input validation with Zod
+- XSS protection with DOMPurify
+- Environment variable configuration
+- Back button navigation
+
+### 📋 Planned Features
+- [ ] Search/filter conversations with debouncing
+- [ ] Basic accessibility improvements (ARIA labels, keyboard nav)
+- [ ] Unit tests for critical functions
 
 ---
 

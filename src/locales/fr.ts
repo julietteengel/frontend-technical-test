@@ -14,6 +14,12 @@ export default {
     you: 'Vous',
     other: 'Autre',
   },
+  error: {
+    title: "Ce n'est pas vous, c'est moi",
+    description: "Une erreur s'est produite de notre côté. Nous travaillons à la résoudre.",
+    tryAgain: 'Réessayer',
+    errorId: "ID d'erreur",
+  },
   common: {
     retry: 'Réessayer',
   },
