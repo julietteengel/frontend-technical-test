@@ -146,18 +146,23 @@ GET    /users                           # List users
 - Reset required: `git checkout src/server/db.json`
 
 ### Data Model: Normalized vs Denormalized
-**Choice:** Normalized (users fetched separately, no nicknames in conversations)
+**Choice:** Normalized (users fetched separately, client-side join)
 
-**Pros:**
-- Single source of truth for user data
-- No data duplication
-- Easier to update user information
+**Trade-offs considered:**
+- **Denormalized:** Store nicknames in conversations → 1 API call, but stale data if users change nicknames
+- **Normalized:** Fetch users separately → Always fresh data, but 2 API calls
 
-**Cons:**
-- Requires client-side joins
-- Two API calls instead of one
+**Why normalized:**
+1. **Data integrity** - Single source of truth for user information
+2. **Scalability** - Easy to add user features (avatars, status, profiles)
+3. **React Query caching** - The "two API calls" concern is mitigated:
+   - `['users']` cached for 60s with `staleTime: 60000`
+   - `['conversations']` cached for 30s with `staleTime: 30000`
+   - After first load, no redundant fetches across components
+   - Modal reuses cached users data instantly
+4. **Future-proof** - If user editing is added later, no migration needed
 
-**Why this choice:** Better for scale, React Query caching minimizes performance impact
+**Performance impact:** Minimal. Both queries run in parallel, and React Query ensures users are fetched once and shared across ConversationList, ConversationHeader, and CreateConversationModal.
 
 ### Why React Query?
 - **Automatic caching** - Reduces API calls
