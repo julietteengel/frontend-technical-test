@@ -5,6 +5,10 @@ export default {
   conversations: {
     noConversations: 'Aucune conversation',
     loadError: 'Échec du chargement des conversations',
+    newConversation: 'Nouvelle conversation',
+    selectUser: 'Sélectionner un utilisateur',
+    cancel: 'Annuler',
+    start: 'Démarrer',
   },
   messages: {
     noMessages: 'Aucun message',

@@ -59,9 +59,9 @@ export async function createConversation(
   senderId: number,
   recipientId: number
 ): Promise<Conversation> {
-  return apiRequest<Conversation>(`/conversations/${senderId}`, {
+  return apiRequest<Conversation>('/conversations', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ recipientId }),
+    body: JSON.stringify({ senderId, recipientId }),
   })
 }

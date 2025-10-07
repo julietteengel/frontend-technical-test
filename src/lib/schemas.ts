@@ -24,10 +24,8 @@ export type Message = z.infer<typeof messageSchema>
 export const conversationSchema = z.object({
   id: z.number(),
   recipientId: z.number(),
-  recipientNickname: z.string(),
   senderId: z.number(),
-  senderNickname: z.string(),
-  lastMessageTimestamp: z.number(),
+  lastMessageTimestamp: z.number().optional(),
 })
 
 export type Conversation = z.infer<typeof conversationSchema>
@@ -43,5 +41,7 @@ export const sendMessageSchema = z.object({
 })
 
 export const createConversationSchema = z.object({
-  recipientId: z.number().positive('Please select a user'),
+  recipientId: z.coerce.number().positive('Please select a user').min(1, 'Please select a user'),
 })
+
+export type CreateConversationForm = z.infer<typeof createConversationSchema>

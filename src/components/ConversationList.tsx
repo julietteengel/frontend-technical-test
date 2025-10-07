@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
-import { getConversations } from '@/lib/api'
+import { getConversations, getUsers } from '@/lib/api'
 import { formatTime } from '@/lib/utils'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
 import { getTranslations, type Locale } from '@/locales'
@@ -17,10 +17,18 @@ interface ConversationListProps {
 export function ConversationList({ lang }: ConversationListProps) {
   const t = getTranslations(lang)
   const loggedUserId = getLoggedUserId()
-  const { data: conversations, isLoading, error, refetch } = useQuery({
+
+  const { data: conversations, isLoading: loadingConvs, error, refetch } = useQuery({
     queryKey: ['conversations', loggedUserId],
     queryFn: () => getConversations(loggedUserId),
   })
+
+  const { data: users, isLoading: loadingUsers } = useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+  })
+
+  const isLoading = loadingConvs || loadingUsers
 
   if (isLoading) {
     return <ConversationListSkeleton />
@@ -45,10 +53,14 @@ export function ConversationList({ lang }: ConversationListProps) {
   return (
     <div className="divide-y divide-gray-200">
       {conversations.map((conversation) => {
-        const otherUser =
+        const otherUserId =
           conversation.senderId === loggedUserId
-            ? { id: conversation.recipientId, nickname: conversation.recipientNickname }
-            : { id: conversation.senderId, nickname: conversation.senderNickname }
+            ? conversation.recipientId
+            : conversation.senderId
+
+        const otherUser = users?.find((u) => u.id === otherUserId)
+
+        if (!otherUser) return null
 
         return (
           <Link
