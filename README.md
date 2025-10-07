@@ -38,19 +38,29 @@
 npm install
 ```
 
-2. Start the API server (Terminal 1):
+2. Configure environment (optional):
+```bash
+# Copy .env.example to .env.local
+cp .env.example .env.local
+
+# Default values:
+NEXT_PUBLIC_API_URL=http://localhost:3005
+PORT=3000
+```
+
+3. Start the API server (Terminal 1):
 ```bash
 npm run start-server
 # API runs on http://localhost:3005
 ```
 
-3. Start the development server (Terminal 2):
+4. Start the development server (Terminal 2):
 ```bash
 npm run dev
 # App runs on http://localhost:3000
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000)
+5. Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -111,6 +121,40 @@ npm run dev
 ---
 
 ## Architecture Decisions
+
+### Database & API Choice
+
+**Choice:** json-server with custom middleware
+
+**Mock Backend:**
+- Server: `src/server/server.js` (custom middleware)
+- Database: `src/server/db.json`
+- Port: 3005
+
+**API Endpoints:**
+```
+GET    /conversations?userId=X          # List conversations
+GET    /conversations?userId=X&userId=Y # OR filter (custom)
+GET    /messages?conversationId=X       # List messages
+POST   /messages                        # Send message
+POST   /conversations                   # Create conversation
+GET    /users                           # List users
+```
+
+**Custom Middleware:**
+- OR filtering for conversations (`?userId=1&userId=2`)
+- Auto-generates metadata on POST /conversations
+- CORS enabled for development
+
+**Why this choice:**
+- **Fast setup** - Critical for 4-hour constraint
+- **Custom logic** - Middleware allows OR filtering, metadata generation
+- **Persistent data** - Changes saved during development
+- **Real API feel** - Proper endpoints, not just mock data
+
+**Trade-offs:**
+- Not production-ready (no auth, validation, relationships)
+- Reset required: `git checkout src/server/db.json`
 
 ### Data Model: Normalized vs Denormalized
 **Choice:** Normalized (users fetched separately, no nicknames in conversations)
