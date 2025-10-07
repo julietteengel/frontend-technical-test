@@ -3,21 +3,22 @@
 ## Time Spent: ~4 hours
 
 ### Breakdown:
-- **Setup & Architecture:** 45 min (in progress...)
-- **Core Features:** TBD
-- **Bonus 1 (Create Conversations):** TBD
-- **Bonus 2 (503 Error Handling):** TBD
-- **Polish & Testing:** TBD
+- **Setup & Architecture:** 45 min
+- **Core Features:** 1h 30min
+- **Bonus 1 (Create Conversations):** 45 min
+- **Bonus 2 (503 Error Handling):** 20 min
+- **Polish, Accessibility & Performance:** 40 min
 
 ---
 
 ## Technical Stack
 
 - **Next.js 15** - App Router with Server Components
-- **React 19** - useOptimistic, useActionState
+- **React 19** - Latest features
 - **TypeScript** - Strict mode
-- **Tailwind CSS** - Utility-first styling
+- **Tailwind CSS v4** - Latest @theme syntax
 - **React Query v5** - Data fetching and caching
+- **React Hook Form** - Form management
 - **Zod** - Runtime validation
 - **DOMPurify** - XSS protection
 - **date-fns** - Date formatting
@@ -56,44 +57,74 @@ npm run dev
 ## Features Implemented
 
 ### ✅ Core Features
-- View conversations list with avatar and last message preview
-- View messages in a conversation with timestamps
+- View conversations list with avatar and last message timestamp
+- View messages in a conversation with proper formatting
 - Send messages with React Hook Form validation
 - Auto-scroll to bottom when new messages arrive
 - Responsive design (mobile + desktop)
 - i18n support (en/fr) via URL routing
 
-### 🚧 Bonus 1: Create New Conversations (In Progress)
-- [ ] Modal to select user
-- [ ] Create conversation via API
-- [ ] Navigate to new conversation
+### ✅ Bonus 1: Create New Conversations
+- Modal to select user with visual feedback
+- Prevents duplicate conversations (navigates to existing)
+- Creates conversation via API
+- Optimistic UI updates with React Query
+- Form validation with Zod
 
-### 🚧 Bonus 2: Handle 503 Errors (In Progress)
-- [ ] error.tsx with friendly error message
-- [ ] Automatic retry with exponential backoff
-- [ ] Manual retry button
+### ✅ Bonus 2: Handle 503 Errors
+- ErrorMessage component with friendly error message
+- Retry button with React Query integration
+- Error boundaries with error.tsx
 
 ### ✅ Additional Features Implemented
+
+**UI Polish:**
 - Loading skeletons for better UX
-- Input validation with Zod
-- XSS protection with DOMPurify
-- Environment variable configuration
+- Partner name displayed in conversation header
+- Visual dividing lines in modal
+- Consistent color scheme matching Leboncoin brand
 - Back button navigation
 
-### 📋 Planned Features
-- [ ] Search/filter conversations with debouncing
-- [ ] Basic accessibility improvements (ARIA labels, keyboard nav)
-- [ ] Unit tests for critical functions
+**Performance:**
+- Lazy loading for CreateConversationModal (code splitting)
+- React.memo on Avatar component
+- useMemo for conversation-user data joining
+- React Query caching (30s for conversations, 60s for users)
+- Link prefetching for instant navigation
+- Visibility-based polling (only polls when tab is active)
+- Auto-refresh messages every 5 seconds
+
+**Accessibility:**
+- ARIA labels on all interactive elements
+- ARIA roles (dialog, alert, log, article, nav)
+- Focus visible styles (focus rings) on all interactive elements
+- Semantic HTML (<nav>, <main>, <header>)
+- aria-hidden on decorative SVG icons
+- aria-live for dynamic message content
+- Keyboard navigation support
+
+**Security:**
+- Input validation with Zod
+- XSS protection with DOMPurify on user-generated content
+- Normalized data model (no nickname duplication)
 
 ---
 
 ## Architecture Decisions
 
-### Why Tailwind CSS?
-- **Fast to prototype** - Critical for 4-hour constraint
-- **Consistent design system** - All design tokens in one place
-- **Good performance** - Purges unused CSS in production
-- **Type-safe** - Autocomplete in VSCode
+### Data Model: Normalized vs Denormalized
+**Choice:** Normalized (users fetched separately, no nicknames in conversations)
+
+**Pros:**
+- Single source of truth for user data
+- No data duplication
+- Easier to update user information
+
+**Cons:**
+- Requires client-side joins
+- Two API calls instead of one
+
+**Why this choice:** Better for scale, React Query caching minimizes performance impact
 
 ### Why React Query?
 - **Automatic caching** - Reduces API calls
@@ -101,14 +132,16 @@ npm run dev
 - **Built-in retry logic** - Perfect for 503 error handling
 - **Optimistic updates** - Instant UI feedback
 
-### Why Zod?
-- **Runtime validation** - Catches invalid data at runtime
+### Why React Hook Form + Zod?
+- **Runtime validation** - Catches invalid data
 - **TypeScript integration** - Type inference from schemas
-- **Client + Server validation** - Same schemas everywhere
+- **Better performance** - Uncontrolled components
+- **Built-in error handling**
 
-### Why DOMPurify?
-- **Industry standard** - For XSS protection
-- **Isomorphic** - Works server-side and client-side
+### Why Lazy Loading?
+- **Smaller initial bundle** - Modal only loads when needed
+- **Faster initial page load**
+- **Code splitting** - Automatic with React.lazy
 
 ---
 
@@ -116,55 +149,93 @@ npm run dev
 
 > **Note:** These are improvements I would add with more time. They represent conscious trade-offs made for the 4-hour constraint.
 
-### 🎨 Design System
-**Current:** Colors hardcoded in Tailwind config
-**Improvement:** Use CSS variables for dynamic theming
-```css
-/* Would enable easy dark mode support */
-:root {
-  --color-chat-blue: #2196F3;
-  [data-theme="dark"] {
-    --color-chat-blue: #1976D2;
-  }
-}
-```
-**Why not now:** No dark mode requirement, 4h time constraint
-**Time needed:** +10 minutes
-
 ### 🧪 Testing
-**Current:** 5-8 unit tests for critical functions
+**Current:** No automated tests
 **Improvement:**
-- Full test coverage (80%+)
+- Unit tests for critical functions (utils, sanitization, validation)
+- Integration tests for components (React Testing Library)
 - E2E tests with Playwright
 - Visual regression tests
 - Performance testing (Lighthouse CI)
 
-**Why not now:** Time constraint, basic coverage is sufficient for demo
-**Time needed:** +2 hours
+**Why not now:** Time constraint (4h limit for technical test)
+**Time needed:** +2-3 hours
 
-### ♿ Accessibility
-**Current:** Basic ARIA labels and keyboard navigation
+**Priority tests to add:**
+```typescript
+// lib/utils.test.ts
+- getAvatarColor() returns consistent colors
+- getInitials() handles edge cases (empty, single word, special chars)
+- formatTime() works across locales
+
+// lib/sanitize.test.ts
+- sanitize() removes XSS attacks
+- sanitize() preserves safe HTML
+
+// components/Avatar.test.tsx
+- renders with correct color and initials
+- memo prevents unnecessary re-renders
+```
+
+### ♿ Advanced Accessibility
+**Current:** Basic ARIA labels, semantic HTML, keyboard nav
 **Improvement:**
-- Full WCAG 2.1 AA audit
+- Full WCAG 2.1 AA compliance
+- Focus trap in modal (prevent tabbing out)
+- Escape key to close modal
 - Automated testing with jest-axe
 - Screen reader testing (VoiceOver, NVDA)
-- Focus trap in modals
-- Comprehensive keyboard shortcuts
+- Skip to main content link
+- Reduced motion support
 
-**Why not now:** Basic accessibility is good for demo, full audit takes time
+**Why not now:** Basic accessibility is production-ready, full audit takes time
 **Time needed:** +1 hour
 
-### ⚡ Performance
-**Current:** React Query caching, debouncing, optimistic UI
-**Improvement:**
-- Virtual scrolling for long message lists
-- Service Worker for offline support
-- Image optimization
-- Code splitting per route
-- Web Vitals monitoring
+**What would be added:**
+- useEffect for focus management in modal
+- Keyboard event handlers (Escape, Tab trap)
+- @media (prefers-reduced-motion)
+- Comprehensive aria-live regions
 
-**Why not now:** Current performance is good, these are optimizations for scale
-**Time needed:** +2 hours
+### ⚡ Performance
+**Current:** Lazy loading, React Query caching, useMemo, visibility-based polling
+**Improvement:**
+- Virtual scrolling for long message lists (react-window)
+- Service Worker for offline support
+- Image optimization (next/image)
+- Web Vitals monitoring
+- Bundle analysis and optimization
+
+**Why not now:** Current performance is excellent for demo scale
+**Time needed:** +1-2 hours
+
+### 🎨 Additional Features
+**Could be added with more time:**
+
+**Conversation Management:**
+- Sort conversations (by date, name, unread)
+- Delete conversations
+- Archive conversations
+- Mark as read/unread
+- Conversation search with debouncing
+
+**Message Features:**
+- Delete messages
+- Edit messages
+- Message reactions
+- Typing indicators
+- Read receipts
+- File attachments
+
+**User Experience:**
+- Dark mode toggle
+- Custom themes
+- Notification system
+- Message drafts
+- Infinite scroll for messages
+
+**Why not now:** Core messaging functionality is complete, these are nice-to-haves
+**Time needed:** +3-5 hours
 
 ### 🔒 Security
 **Current:** Zod validation, DOMPurify sanitization
@@ -174,9 +245,10 @@ npm run dev
 - Content Security Policy headers
 - Input sanitization audit
 - Penetration testing
+- Authentication (currently hardcoded user ID)
 
 **Why not now:** Basic security is covered, advanced features need backend support
-**Time needed:** +1 hour
+**Time needed:** +1-2 hours
 
 ---
 
@@ -184,26 +256,60 @@ npm run dev
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Conversation list
-│   ├── error.tsx           # 503 error handling
-│   └── conversations/
-│       └── [id]/
-│           └── page.tsx    # Conversation detail
+├── app/
+│   ├── [lang]/
+│   │   ├── layout.tsx          # Root layout with providers
+│   │   ├── page.tsx            # Conversation list
+│   │   ├── error.tsx           # Error boundary
+│   │   ├── providers.tsx       # React Query provider
+│   │   └── conversations/
+│   │       └── [id]/
+│   │           └── page.tsx    # Conversation detail
 ├── components/
-│   ├── Avatar.tsx
-│   ├── ConversationList.tsx
-│   ├── MessageList.tsx
+│   ├── Avatar.tsx              # Memoized avatar component
+│   ├── ConversationHeader.tsx  # Partner name header
+│   ├── ConversationList.tsx    # List with useMemo optimization
+│   ├── ConversationListWithModal.tsx
+│   ├── CreateConversationModal.tsx  # Lazy loaded
+│   ├── ErrorMessage.tsx        # Retry UI
+│   ├── LoadingSkeleton.tsx
 │   ├── MessageInput.tsx
-│   └── CreateConversationModal.tsx
+│   └── MessageList.tsx         # With visibility polling
 ├── lib/
-│   ├── api.ts              # API client
-│   ├── schemas.ts          # Zod schemas
-│   └── utils.ts            # Utilities
-└── styles/
-    └── globals.css
+│   ├── api.ts                  # API client
+│   ├── sanitize.ts             # XSS protection
+│   ├── schemas.ts              # Zod validation
+│   └── utils.ts                # Utilities
+├── locales/
+│   └── index.ts                # i18n translations
+├── server/
+│   ├── db.json                 # Mock database
+│   └── server.js               # Custom middleware
+└── utils/
+    └── getLoggedUserId.ts      # Auth placeholder
 ```
+
+---
+
+## Key Implementation Highlights
+
+### 1. Performance Optimization
+- **Code splitting:** Modal lazy loaded only when opened
+- **Smart caching:** Different staleTime for different data types
+- **Efficient polling:** Only when tab is visible
+- **Memoization:** Prevents unnecessary re-renders and recalculations
+
+### 2. User Experience
+- **Optimistic updates:** UI responds instantly
+- **Auto-scroll:** New messages scroll into view
+- **Loading states:** Skeleton screens during fetch
+- **Error handling:** Friendly messages with retry
+
+### 3. Code Quality
+- **Type safety:** TypeScript strict mode
+- **Validation:** Zod schemas for runtime safety
+- **Security:** DOMPurify for XSS protection
+- **Accessibility:** ARIA labels and semantic HTML
 
 ---
 
@@ -213,10 +319,16 @@ I used **Claude Code as a pair programming partner** to:
 - Speed up boilerplate code
 - Discuss architecture decisions
 - Ensure React/Next.js best practices
+- Implement performance optimizations
 
 **All architectural decisions and priorities were mine.**
 
-The scope shows modern React 19/Next.js 15 patterns while staying realistic for a 4-hour technical test.
+The implementation showcases:
+- Modern React 19/Next.js 15 patterns
+- Production-ready performance optimizations
+- Accessibility awareness
+- Security best practices
+- Realistic scope for a 4-hour technical test
 
 ---
 
