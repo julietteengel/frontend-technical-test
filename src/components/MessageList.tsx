@@ -48,7 +48,7 @@ export function MessageList({ lang, conversationId }: MessageListProps) {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4" role="log" aria-live="polite" aria-label="Messages">
         {!messages || messages.length === 0 ? (
           <div className="text-center text-gray-500">{t.messages.noMessages}</div>
         ) : (
@@ -58,6 +58,8 @@ export function MessageList({ lang, conversationId }: MessageListProps) {
               <div
                 key={message.id}
                 className={`flex gap-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}
+                role="article"
+                aria-label={`Message from ${isOwnMessage ? 'you' : 'other user'}`}
               >
                 <Avatar
                   nickname={isOwnMessage ? t.messages.you : t.messages.other}

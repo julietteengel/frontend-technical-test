@@ -19,7 +19,9 @@ export default async function Home({
         <header className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10 flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">{t.app.title}</h1>
         </header>
-        <ConversationListWithModal lang={lang as Locale} />
+        <main>
+          <ConversationListWithModal lang={lang as Locale} />
+        </main>
       </div>
     </div>
   )

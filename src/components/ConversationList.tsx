@@ -51,7 +51,7 @@ export function ConversationList({ lang }: ConversationListProps) {
   }
 
   return (
-    <div className="divide-y divide-gray-200">
+    <nav aria-label="Conversations list" className="divide-y divide-gray-200">
       {conversations.map((conversation) => {
         const otherUserId =
           conversation.senderId === loggedUserId
@@ -66,7 +66,8 @@ export function ConversationList({ lang }: ConversationListProps) {
           <Link
             key={conversation.id}
             href={`/${lang}/conversations/${conversation.id}`}
-            className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-4 p-4 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-lbc-orange transition-colors"
+            aria-label={`Conversation with ${otherUser.nickname}`}
           >
             <Avatar nickname={otherUser.nickname} userId={otherUser.id} />
             <div className="flex-1 min-w-0">
@@ -78,6 +79,6 @@ export function ConversationList({ lang }: ConversationListProps) {
           </Link>
         )
       })}
-    </div>
+    </nav>
   )
 }

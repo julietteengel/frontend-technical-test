@@ -96,10 +96,13 @@ export function CreateConversationModal({
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
     >
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[80vh] flex flex-col">
         <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 id="modal-title" className="text-xl font-bold text-gray-900">
             {t.conversations.newConversation}
           </h2>
           <p className="text-sm text-gray-600 mt-1">
@@ -119,16 +122,16 @@ export function CreateConversationModal({
                 ))}
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="divide-y divide-gray-200">
                 {availableUsers?.map((user) => {
                   const isSelected = Number(selectedUserId) === user.id
                   return (
                   <label
                     key={user.id}
-                    className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer ${
+                    className={`w-full flex items-center gap-3 p-3 transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-lbc-orange/10 border-2 border-lbc-orange'
-                        : 'hover:bg-gray-100 border-2 border-transparent'
+                        ? 'bg-lbc-orange/10'
+                        : 'hover:bg-gray-50'
                     }`}
                   >
                     <input
@@ -138,6 +141,7 @@ export function CreateConversationModal({
                         setValueAs: (value) => parseInt(value, 10)
                       })}
                       className="sr-only"
+                      aria-label={`Select ${user.nickname}`}
                     />
                     <Avatar nickname={user.nickname} userId={user.id} size="sm" />
                     <span className="flex-1 font-medium text-gray-900">
@@ -148,6 +152,7 @@ export function CreateConversationModal({
                         className="w-5 h-5 text-lbc-orange"
                         fill="currentColor"
                         viewBox="0 0 20 20"
+                        aria-hidden="true"
                       >
                         <path
                           fillRule="evenodd"
@@ -161,9 +166,6 @@ export function CreateConversationModal({
                 })}
               </div>
             )}
-            {errors.recipientId && (
-              <p className="mt-2 text-sm text-red-600">{errors.recipientId.message}</p>
-            )}
           </div>
 
           <div className="p-4 border-t border-gray-200 flex gap-3">
@@ -174,14 +176,16 @@ export function CreateConversationModal({
                 onClose()
               }}
               disabled={mutation.isPending}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lbc-orange transition-colors disabled:opacity-50"
+              aria-label="Cancel"
             >
               {t.conversations.cancel}
             </button>
             <button
               type="submit"
               disabled={!Number(selectedUserId) || mutation.isPending}
-              className="flex-1 px-4 py-2 bg-lbc-orange text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-lbc-orange text-white rounded-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-lbc-orange focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Start conversation"
             >
               {mutation.isPending ? '...' : t.conversations.start}
             </button>
