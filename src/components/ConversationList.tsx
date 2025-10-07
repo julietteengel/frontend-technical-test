@@ -82,7 +82,7 @@ export function ConversationList({ lang }: ConversationListProps) {
           <Link
             key={conversation.id}
             href={`/${lang}/conversations/${conversation.id}`}
-            className="flex items-center gap-4 p-4 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-lbc-orange transition-colors"
+            className="flex items-center gap-4 p-4 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-lbc-orange transition-colors"
             aria-label={`Conversation with ${otherUser.nickname}`}
             prefetch={true}
           >

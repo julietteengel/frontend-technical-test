@@ -38,7 +38,7 @@ export function ConversationHeader({ lang, conversationId }: ConversationHeaderP
       <div className="flex items-center gap-3">
         <Link
           href={`/${lang}`}
-          className="text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-lbc-orange rounded transition-colors"
+          className="text-gray-600 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-lbc-orange rounded transition-colors"
           aria-label="Back to conversations"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -176,7 +176,7 @@ export function CreateConversationModal({
                 onClose()
               }}
               disabled={mutation.isPending}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lbc-orange transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-lbc-orange transition-colors disabled:opacity-50"
               aria-label="Cancel"
             >
               {t.conversations.cancel}
@@ -184,7 +184,7 @@ export function CreateConversationModal({
             <button
               type="submit"
               disabled={!Number(selectedUserId) || mutation.isPending}
-              className="flex-1 px-4 py-2 bg-lbc-orange text-white rounded-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-lbc-orange focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-lbc-orange text-white rounded-lg hover:bg-opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-lbc-orange focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Start conversation"
             >
               {mutation.isPending ? '...' : t.conversations.start}
