@@ -41,7 +41,7 @@ export const sendMessageSchema = z.object({
 })
 
 export const createConversationSchema = z.object({
-  recipientId: z.coerce.number().positive('Please select a user').min(1, 'Please select a user'),
+  recipientId: z.number().positive('Please select a user').min(1, 'Please select a user'),
 })
 
 export type CreateConversationForm = z.infer<typeof createConversationSchema>

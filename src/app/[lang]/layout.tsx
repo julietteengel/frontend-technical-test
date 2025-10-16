@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Providers } from './providers'
+import { LocaleProvider } from '@/contexts/LocaleContext'
+import type { Locale } from '@/locales'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -15,11 +17,15 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>
 }) {
   const { lang } = await params
+  // Middleware ensures lang is always a valid Locale
+  const locale = lang as Locale
 
   return (
-    <html lang={lang}>
+    <html lang={locale}>
       <body>
-        <Providers>{children}</Providers>
+        <LocaleProvider locale={locale}>
+          <Providers>{children}</Providers>
+        </LocaleProvider>
       </body>
     </html>
   )

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { getMessages } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
-import { getTranslations, type Locale } from '@/locales'
+import { useLocale } from '@/contexts/LocaleContext'
 import { Avatar } from './Avatar'
 import { MessageListSkeleton } from './LoadingSkeleton'
 import { ErrorMessage } from './ErrorMessage'
@@ -13,12 +13,11 @@ import { formatTime } from '@/lib/utils'
 import { sanitize } from '@/lib/sanitize'
 
 interface MessageListProps {
-  lang: Locale
   conversationId: number
 }
 
-export function MessageList({ lang, conversationId }: MessageListProps) {
-  const t = getTranslations(lang)
+export function MessageList({ conversationId }: MessageListProps) {
+  const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const { data: messages, isLoading, error, refetch } = useQuery({
@@ -45,7 +44,6 @@ export function MessageList({ lang, conversationId }: MessageListProps) {
         <ErrorMessage
           message={t.messages.loadError}
           onRetry={() => refetch()}
-          lang={lang}
         />
       </div>
     )
@@ -73,7 +71,7 @@ export function MessageList({ lang, conversationId }: MessageListProps) {
                 />
                 <div className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}>
                   <p className="text-xs text-gray-500 mb-1">
-                    {formatTime(message.timestamp * 1000, lang)}
+                    {formatTime(message.timestamp * 1000, locale)}
                   </p>
                   <div
                     className={`rounded-2xl px-4 py-2 max-w-xs break-words ${
@@ -91,7 +89,7 @@ export function MessageList({ lang, conversationId }: MessageListProps) {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <MessageInput conversationId={conversationId} lang={lang} />
+      <MessageInput conversationId={conversationId} />
     </>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useState, lazy, Suspense } from 'react'
 import { ConversationList } from './ConversationList'
-import { getTranslations, type Locale } from '@/locales'
+import { useLocale } from '@/contexts/LocaleContext'
 
 const CreateConversationModal = lazy(() =>
   import('./CreateConversationModal').then((mod) => ({
@@ -10,15 +10,9 @@ const CreateConversationModal = lazy(() =>
   }))
 )
 
-interface ConversationListWithModalProps {
-  lang: Locale
-}
-
-export function ConversationListWithModal({
-  lang,
-}: ConversationListWithModalProps) {
+export function ConversationListWithModal() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const t = getTranslations(lang)
+  const { t } = useLocale()
 
   return (
     <>
@@ -43,11 +37,10 @@ export function ConversationListWithModal({
           {t.conversations.newConversation}
         </button>
       </div>
-      <ConversationList lang={lang} />
+      <ConversationList />
       {isModalOpen && (
         <Suspense fallback={null}>
           <CreateConversationModal
-            lang={lang}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
           />

@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getUsers, createConversation, getConversations } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
-import { getTranslations, type Locale } from '@/locales'
+import { useLocale } from '@/contexts/LocaleContext'
 import { Avatar } from './Avatar'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -11,17 +11,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createConversationSchema, type CreateConversationForm } from '@/lib/schemas'
 
 interface CreateConversationModalProps {
-  lang: Locale
   isOpen: boolean
   onClose: () => void
 }
 
 export function CreateConversationModal({
-  lang,
   isOpen,
   onClose,
 }: CreateConversationModalProps) {
-  const t = getTranslations(lang)
+  const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -58,7 +56,7 @@ export function CreateConversationModal({
       await queryClient.invalidateQueries({ queryKey: ['conversations'] })
       reset()
       onClose()
-      router.push(`/${lang}/conversations/${conversation.id}`)
+      router.push(`/${locale}/conversations/${conversation.id}`)
     },
   })
 
@@ -78,7 +76,7 @@ export function CreateConversationModal({
       // Navigate to existing conversation
       reset()
       onClose()
-      router.push(`/${lang}/conversations/${existingConversation.id}`)
+      router.push(`/${locale}/conversations/${existingConversation.id}`)
     } else {
       // Create new conversation
       mutation.mutate(data.recipientId)

@@ -4,15 +4,14 @@ import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { getConversations, getUsers } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
-import { getTranslations, type Locale } from '@/locales'
+import { useLocale } from '@/contexts/LocaleContext'
 
 interface ConversationHeaderProps {
-  lang: Locale
   conversationId: number
 }
 
-export function ConversationHeader({ lang, conversationId }: ConversationHeaderProps) {
-  const t = getTranslations(lang)
+export function ConversationHeader({ conversationId }: ConversationHeaderProps) {
+  const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
 
   const { data: conversations } = useQuery({
@@ -37,7 +36,7 @@ export function ConversationHeader({ lang, conversationId }: ConversationHeaderP
     <header className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
       <div className="flex items-center gap-3">
         <Link
-          href={`/${lang}`}
+          href={`/${locale}`}
           className="text-gray-600 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-lbc-orange rounded transition-colors"
           aria-label="Back to conversations"
         >

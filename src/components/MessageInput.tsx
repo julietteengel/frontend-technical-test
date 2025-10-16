@@ -5,19 +5,18 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { sendMessage } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
-import { getTranslations, type Locale } from '@/locales'
+import { useLocale } from '@/contexts/LocaleContext'
 import { sendMessageSchema } from '@/lib/schemas'
 import type { z } from 'zod'
 
 interface MessageInputProps {
   conversationId: number
-  lang: Locale
 }
 
 type FormData = z.infer<typeof sendMessageSchema>
 
-export function MessageInput({ conversationId, lang }: MessageInputProps) {
-  const t = getTranslations(lang)
+export function MessageInput({ conversationId }: MessageInputProps) {
+  const { t } = useLocale()
   const loggedUserId = getLoggedUserId()
   const queryClient = useQueryClient()
 

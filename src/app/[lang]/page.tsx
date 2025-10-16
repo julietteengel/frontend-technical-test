@@ -1,17 +1,10 @@
-import { getTranslations, type Locale } from '@/locales'
+'use client'
+
 import { ConversationListWithModal } from '@/components/ConversationListWithModal'
+import { useLocale } from '@/contexts/LocaleContext'
 
-export function generateStaticParams() {
-  return [{ lang: 'en' }, { lang: 'fr' }]
-}
-
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ lang: string }>
-}) {
-  const { lang } = await params
-  const t = getTranslations(lang as Locale)
+export default function Home() {
+  const { t } = useLocale()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -20,7 +13,7 @@ export default async function Home({
           <h1 className="text-xl font-bold text-gray-900">{t.app.title}</h1>
         </header>
         <main>
-          <ConversationListWithModal lang={lang as Locale} />
+          <ConversationListWithModal />
         </main>
       </div>
     </div>

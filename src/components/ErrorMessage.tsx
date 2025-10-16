@@ -1,13 +1,14 @@
-import { getTranslations, type Locale } from '@/locales'
+'use client'
+
+import { useLocale } from '@/contexts/LocaleContext'
 
 interface ErrorMessageProps {
   message: string
   onRetry?: () => void
-  lang: Locale
 }
 
-export function ErrorMessage({ message, onRetry, lang }: ErrorMessageProps) {
-  const t = getTranslations(lang)
+export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
+  const { t } = useLocale()
 
   return (
     <div className="p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">

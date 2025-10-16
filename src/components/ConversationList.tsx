@@ -6,17 +6,13 @@ import { useMemo } from 'react'
 import { getConversations, getUsers } from '@/lib/api'
 import { formatTime } from '@/lib/utils'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
-import { getTranslations, type Locale } from '@/locales'
+import { useLocale } from '@/contexts/LocaleContext'
 import { Avatar } from './Avatar'
 import { ConversationListSkeleton } from './LoadingSkeleton'
 import { ErrorMessage } from './ErrorMessage'
 
-interface ConversationListProps {
-  lang: Locale
-}
-
-export function ConversationList({ lang }: ConversationListProps) {
-  const t = getTranslations(lang)
+export function ConversationList() {
+  const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
 
   const { data: conversations, isLoading: loadingConvs, error, refetch } = useQuery({
@@ -62,7 +58,6 @@ export function ConversationList({ lang }: ConversationListProps) {
         <ErrorMessage
           message={t.conversations.loadError}
           onRetry={() => refetch()}
-          lang={lang}
         />
       </div>
     )
@@ -81,7 +76,7 @@ export function ConversationList({ lang }: ConversationListProps) {
         return (
           <Link
             key={conversation.id}
-            href={`/${lang}/conversations/${conversation.id}`}
+            href={`/${locale}/conversations/${conversation.id}`}
             className="flex items-center gap-4 p-4 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-lbc-orange transition-colors"
             aria-label={`Conversation with ${otherUser.nickname}`}
             prefetch={true}
@@ -90,7 +85,7 @@ export function ConversationList({ lang }: ConversationListProps) {
             <div className="flex-1 min-w-0">
               <p className="font-medium text-gray-900 truncate">{otherUser.nickname}</p>
               <p className="text-sm text-gray-500">
-                {conversation.lastMessageTimestamp && formatTime(conversation.lastMessageTimestamp * 1000, lang)}
+                {conversation.lastMessageTimestamp && formatTime(conversation.lastMessageTimestamp * 1000, locale)}
               </p>
             </div>
           </Link>
