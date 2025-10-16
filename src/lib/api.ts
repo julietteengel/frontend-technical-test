@@ -6,17 +6,13 @@ import {
   type Message,
   type User,
 } from './schemas'
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ??
-  (process.env.NODE_ENV === 'production'
-    ? (() => { throw new Error('NEXT_PUBLIC_API_URL is required in production') })()
-    : 'http://localhost:3005')
+import { CONFIG } from '@/config/constants'
 
 async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, options)
+  const response = await fetch(`${CONFIG.API.BASE_URL}${endpoint}`, options)
   if (!response.ok) {
     throw new Error(`API request failed: ${response.statusText}`)
   }

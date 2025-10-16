@@ -1,12 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { getConversations, getUsers } from '@/lib/api'
 import { formatTime } from '@/lib/utils'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
 import { useLocale } from '@/contexts/LocaleContext'
+import { useConversations } from '@/hooks/useConversations'
+import { useUsers } from '@/hooks/useUsers'
 import { Avatar } from './Avatar'
 import { ConversationListSkeleton } from './LoadingSkeleton'
 import { ErrorMessage } from './ErrorMessage'
@@ -15,17 +15,8 @@ export function ConversationList() {
   const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
 
-  const { data: conversations, isLoading: loadingConvs, error, refetch } = useQuery({
-    queryKey: ['conversations', loggedUserId],
-    queryFn: () => getConversations(loggedUserId),
-    staleTime: 30000,
-  })
-
-  const { data: users, isLoading: loadingUsers } = useQuery({
-    queryKey: ['users'],
-    queryFn: getUsers,
-    staleTime: 60000,
-  })
+  const { data: conversations, isLoading: loadingConvs, error, refetch } = useConversations(loggedUserId)
+  const { data: users, isLoading: loadingUsers } = useUsers()
 
   const isLoading = loadingConvs || loadingUsers
 

@@ -1,9 +1,11 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getUsers, createConversation, getConversations } from '@/lib/api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createConversation } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
 import { useLocale } from '@/contexts/LocaleContext'
+import { useUsers } from '@/hooks/useUsers'
+import { useConversations } from '@/hooks/useConversations'
 import { Avatar } from './Avatar'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -37,17 +39,8 @@ export function CreateConversationModal({
 
   const selectedUserId = watch('recipientId')
 
-  const { data: users, isLoading } = useQuery({
-    queryKey: ['users'],
-    queryFn: getUsers,
-    enabled: isOpen,
-  })
-
-  const { data: conversations } = useQuery({
-    queryKey: ['conversations', loggedUserId],
-    queryFn: () => getConversations(loggedUserId),
-    enabled: isOpen,
-  })
+  const { data: users, isLoading } = useUsers()
+  const { data: conversations } = useConversations(loggedUserId)
 
   const mutation = useMutation({
     mutationFn: (recipientId: number) =>

@@ -1,10 +1,9 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
-import { getMessages } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
 import { useLocale } from '@/contexts/LocaleContext'
+import { useMessages } from '@/hooks/useMessages'
 import { Avatar } from './Avatar'
 import { MessageListSkeleton } from './LoadingSkeleton'
 import { ErrorMessage } from './ErrorMessage'
@@ -20,15 +19,7 @@ export function MessageList({ conversationId }: MessageListProps) {
   const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const { data: messages, isLoading, error, refetch } = useQuery({
-    queryKey: ['messages', conversationId],
-    queryFn: () => getMessages(conversationId),
-    refetchInterval: (query) => {
-      // Only poll when tab is visible and query succeeded
-      return document.visibilityState === 'visible' ? 5000 : false
-    },
-    staleTime: 1000,
-  })
+  const { data: messages, isLoading, error, refetch } = useMessages(conversationId)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })

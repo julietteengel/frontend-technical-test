@@ -1,10 +1,10 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { getConversations, getUsers } from '@/lib/api'
 import { getLoggedUserId } from '@/utils/getLoggedUserId'
 import { useLocale } from '@/contexts/LocaleContext'
+import { useConversations } from '@/hooks/useConversations'
+import { useUsers } from '@/hooks/useUsers'
 
 interface ConversationHeaderProps {
   conversationId: number
@@ -14,17 +14,8 @@ export function ConversationHeader({ conversationId }: ConversationHeaderProps) 
   const { locale, t } = useLocale()
   const loggedUserId = getLoggedUserId()
 
-  const { data: conversations } = useQuery({
-    queryKey: ['conversations', loggedUserId],
-    queryFn: () => getConversations(loggedUserId),
-    staleTime: 30000,
-  })
-
-  const { data: users } = useQuery({
-    queryKey: ['users'],
-    queryFn: getUsers,
-    staleTime: 60000,
-  })
+  const { data: conversations } = useConversations(loggedUserId)
+  const { data: users } = useUsers()
 
   const conversation = conversations?.find(c => c.id === conversationId)
   const otherUserId = conversation?.senderId === loggedUserId
