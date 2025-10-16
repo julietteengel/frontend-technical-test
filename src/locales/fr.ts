@@ -27,4 +27,9 @@ export default {
   common: {
     retry: 'Réessayer',
   },
+  notFound: {
+    title: 'Page introuvable',
+    description: "La page que vous recherchez n'existe pas ou a été déplacée.",
+    backHome: 'Retour aux conversations',
+  },
 } as const

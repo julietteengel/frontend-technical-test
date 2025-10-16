@@ -27,4 +27,9 @@ export default {
   common: {
     retry: 'Retry',
   },
+  notFound: {
+    title: 'Page not found',
+    description: "The page you're looking for doesn't exist or has been moved.",
+    backHome: 'Back to conversations',
+  },
 } as const
